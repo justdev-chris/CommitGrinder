@@ -3,14 +3,17 @@ name: CommitGrinder
 on:
   workflow_dispatch:
 
+# Add this permissions block to give write access
+permissions:
+  contents: write
+
 jobs:
   grind:
     runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        # GITHUB_TOKEN should now work with 'contents: write'
 
       - name: Configure Git
         run: |
@@ -20,7 +23,7 @@ jobs:
       - name: Read config + grind
         run: |
           source grind.cfg
-          
+
           for i in $(seq 1 $count); do
             echo "grind $i" >> "$file"
             git add "$file"
