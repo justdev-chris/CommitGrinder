@@ -1,1 +1,32 @@
+name: CommitGrinder
 
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "How many commits"
+        required: true
+        default: "10"
+      message:
+        description: "Commit message base"
+        required: true
+        default: "grind"
+
+jobs:
+  grind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Grind commits
+        run: |
+          COUNT=${{ inputs.count }}
+          MSG="${{ inputs.message }}"
+          for i in $(seq 1 $COUNT); do
+            echo "grind $i" >> grind.txt
+            git add grind.txt
+            git commit -m "$MSG $i"
+          done
+
+      - name: Push
+        run: git push
