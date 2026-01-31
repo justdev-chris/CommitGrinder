@@ -6,13 +6,21 @@ on:
 jobs:
   grind:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
 
       - name: Read config + grind
         run: |
           source grind.cfg
-
+          
           for i in $(seq 1 $count); do
             echo "grind $i" >> "$file"
             git add "$file"
